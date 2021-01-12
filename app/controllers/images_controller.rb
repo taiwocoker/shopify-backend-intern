@@ -1,51 +1,22 @@
 class ImagesController < ApplicationController
-  before_action :set_image, only: [:show, :update, :destroy]
-
-  # GET /images
   def index
-    @images = Image.all
-
-    render json: @images
+    render json: Image.all, status: :ok
   end
-
-  # GET /images/1
   def show
-    render json: @image
+    @image = Image.find(params[:id])
+    return render json: @image, status: :ok if @image
   end
-
-  # POST /images
   def create
-    @image = Image.new(image_params)
-
-    if @image.save
-      render json: @image, status: :created, location: @image
-    else
-      render json: @image.errors, status: :unprocessable_entity
-    end
+    @images = Image.create!(images_params)
+    render json: @images, status: :created
   end
-
-  # PATCH/PUT /images/1
-  def update
-    if @image.update(image_params)
-      render json: @image
-    else
-      render json: @image.errors, status: :unprocessable_entity
-    end
+  def welcome
+    @welcome = 'Welcome to my App!'
+    render html: @welcome
   end
-
-  # DELETE /images/1
-  def destroy
-    @image.destroy
-  end
-
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_image
-      @image = Image.find(params[:id])
-    end
-
-    # Only allow a trusted parameter "white list" through.
-    def image_params
-      params.require(:image).permit(:name, :description)
-    end
+  def images_params
+    params.permit(:name, :description, :image)
+  end
 end
+
